@@ -1,0 +1,41 @@
+_BASE_: "../Sparse-RCNN-FPN/sparsercnn.res101.300pro.3x.yaml"
+MODEL:
+  META_ARCHITECTURE: "SparseRCNNCPR"
+  WEIGHTS: "checkpoints/coco/sparse_rcnn_r101p300/sparse_rcnn_base_lrv1_all_init/model_reset_surgery_init.pth"
+  SparseRCNN:
+    NUM_CLASSES: 80
+    DEEP_CONSISTENCY: 0
+  BACKBONE:
+    BKN_FREEZE: True
+    FPN_FREEZE: True
+  ROI_HEADS:
+    FREEZE_FEAT: True
+    FREEZE_INIT: False
+  PROJ_HEADS:
+    PROJ_COM: False
+    NEG_RCNT: 10
+    POS_TOPK: 10
+  CONTRASTIVE:
+    THRE_IOU: 0.8
+    INITACT: False
+DATASETS:
+  TRAIN: ('coco_trainval_all_1shot',)
+  TEST: ('coco_test_all',)
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.000075
+  STEPS: (14400,)
+  MAX_ITER: 16000
+  CHECKPOINT_PERIOD: 500
+  WARMUP_ITERS: 10
+INPUT:
+  CROP:
+    ENABLED: True
+TEST:
+  EVAL_PERIOD: 500
+  PCB:
+    ENABLED: False
+    ALPHA: 0.5
+  AUG:
+    ENABLED: False
+OUTPUT_DIR: "checkpoints/coco/sparse_rcnn_r101p300/All_1shot_v1.i_baseline"
